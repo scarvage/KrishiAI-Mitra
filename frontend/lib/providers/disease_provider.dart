@@ -23,6 +23,12 @@ class DiseaseProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setLanguage(String code) {
+    if (_language == code) return;
+    _language = code;
+    notifyListeners();
+  }
+
   Future<void> pickAndAnalyze(ImageSource source) async {
     final file = await _imagePicker.pickImage(
       source: source,

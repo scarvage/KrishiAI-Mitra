@@ -38,6 +38,14 @@ class VoiceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setLanguage(String code) {
+    if (_language == code) return;
+    _language = code;
+    _messages.clear();
+    _initializeWelcomeMessage();
+    notifyListeners();
+  }
+
   // Called when the mic button is tapped
   void startListening() {
     _isListening = true;
