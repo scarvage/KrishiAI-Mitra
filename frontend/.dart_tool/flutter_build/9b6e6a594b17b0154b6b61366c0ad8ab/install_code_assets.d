@@ -1,0 +1,1 @@
+ /Users/nidhigond/Desktop/KrishiAI-Mitra/frontend/.dart_tool/flutter_build/9b6e6a594b17b0154b6b61366c0ad8ab/native_assets.json: 
