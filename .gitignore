@@ -1,1 +1,5 @@
 .kiro/
+
+# Backend environment variables
+backend/.env
+backend/node_modules/
