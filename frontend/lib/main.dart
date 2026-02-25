@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/disease_provider.dart';
+import 'providers/language_provider.dart';
 import 'providers/mandi_provider.dart';
 import 'providers/voice_provider.dart';
 import 'screens/dashboard_screen.dart';
@@ -10,17 +12,38 @@ import 'screens/disease_screen.dart';
 import 'screens/mandi_screen.dart';
 import 'screens/voice_chat_screen.dart';
 import 'utils/app_colors.dart';
+import 'widgets/language_selection_dialog.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+
+  final languageProvider = LanguageProvider();
+  await languageProvider.init();
+
+  final voiceProvider = VoiceProvider();
+  final diseaseProvider = DiseaseProvider();
+  final mandiProvider = MandiProvider()..loadPrices();
+
+  // Sync all feature providers whenever the global language changes.
+  void syncLanguage() {
+    final code = languageProvider.languageCode;
+    voiceProvider.setLanguage(code);
+    diseaseProvider.setLanguage(code);
+    mandiProvider.setLanguage(code);
+  }
+
+  // Apply saved language on startup.
+  syncLanguage();
+  languageProvider.addListener(syncLanguage);
+
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => VoiceProvider()),
-        ChangeNotifierProvider(create: (_) => DiseaseProvider()),
-        ChangeNotifierProvider(
-          create: (_) => MandiProvider()..loadPrices(),
-        ),
+        ChangeNotifierProvider<LanguageProvider>.value(value: languageProvider),
+        ChangeNotifierProvider<VoiceProvider>.value(value: voiceProvider),
+        ChangeNotifierProvider<DiseaseProvider>.value(value: diseaseProvider),
+        ChangeNotifierProvider<MandiProvider>.value(value: mandiProvider),
       ],
       child: const KrishiMitraApp(),
     ),
@@ -88,6 +111,19 @@ class _HomePageState extends State<HomePage> {
     DiseaseScreen(),
     MandiScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkLanguageSetup());
+  }
+
+  void _checkLanguageSetup() {
+    final provider = context.read<LanguageProvider>();
+    if (!provider.isLanguageSet) {
+      LanguageSelectionDialog.show(context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

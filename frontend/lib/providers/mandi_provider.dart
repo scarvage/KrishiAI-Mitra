@@ -30,6 +30,12 @@ class MandiProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setLanguage(String code) {
+    if (_language == code) return;
+    _language = code;
+    notifyListeners();
+  }
+
   Future<void> loadPrices() async {
     _isLoading = true;
     notifyListeners();
