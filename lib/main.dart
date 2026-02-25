@@ -1,8 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(const KrishiMitraApp());
+import 'providers/disease_provider.dart';
+import 'providers/mandi_provider.dart';
+import 'providers/voice_provider.dart';
+import 'screens/dashboard_screen.dart';
+import 'screens/disease_screen.dart';
+import 'screens/mandi_screen.dart';
+import 'screens/voice_chat_screen.dart';
+import 'utils/app_colors.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => VoiceProvider()),
+        ChangeNotifierProvider(create: (_) => DiseaseProvider()),
+        ChangeNotifierProvider(
+          create: (_) => MandiProvider()..loadPrices(),
+        ),
+      ],
+      child: const KrishiMitraApp(),
+    ),
+  );
 }
 
 class KrishiMitraApp extends StatelessWidget {
@@ -11,14 +33,39 @@ class KrishiMitraApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Krishi Mitra',
+      title: 'Krishi Mitra | कृषि मित्र',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF4CAF50), // Green for agriculture
+          seedColor: AppColors.primary,
           brightness: Brightness.light,
         ),
         textTheme: GoogleFonts.interTextTheme(),
+        cardTheme: const CardThemeData(
+          elevation: 2,
+          margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        ),
+        filledButtonTheme: FilledButtonThemeData(
+          style: FilledButton.styleFrom(
+            backgroundColor: AppColors.primary,
+            foregroundColor: Colors.white,
+            textStyle: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+            foregroundColor: AppColors.primary,
+            side: const BorderSide(color: AppColors.primary),
+            textStyle: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
       ),
       home: const HomePage(),
     );
@@ -35,160 +82,44 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [
-    const DashboardPage(),
-    const WeatherPage(),
-    const CropsPage(),
-    const ProfilePage(),
+  final List<Widget> _pages = const [
+    DashboardScreen(),
+    VoiceChatScreen(),
+    DiseaseScreen(),
+    MandiScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Krishi Mitra'),
-        centerTitle: true,
-        elevation: 0,
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages,
       ),
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: (index) {
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: (index) {
           setState(() {
             _selectedIndex = index;
           });
         },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.home_rounded),
+            label: 'होम',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.cloud),
-            label: 'Weather',
+          NavigationDestination(
+            icon: Icon(Icons.mic_rounded),
+            label: 'आवाज़',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.agriculture),
-            label: 'Crops',
+          NavigationDestination(
+            icon: Icon(Icons.camera_alt_rounded),
+            label: 'रोग',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
+          NavigationDestination(
+            icon: Icon(Icons.trending_up_rounded),
+            label: 'मंडी',
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class DashboardPage extends StatelessWidget {
-  const DashboardPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Welcome to Krishi Mitra',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 16),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    const Icon(Icons.info, size: 48),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Your Agriculture Assistant',
-                      style: Theme.of(context).textTheme.titleMedium,
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Get real-time weather updates, crop management tips, and connect with other farmers.',
-                      style: Theme.of(context).textTheme.bodySmall,
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class WeatherPage extends StatelessWidget {
-  const WeatherPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.cloud, size: 64),
-          const SizedBox(height: 16),
-          Text(
-            'Weather Information',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          const SizedBox(height: 8),
-          const Text('Weather updates coming soon...'),
-        ],
-      ),
-    );
-  }
-}
-
-class CropsPage extends StatelessWidget {
-  const CropsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.agriculture, size: 64),
-          const SizedBox(height: 16),
-          Text(
-            'Crop Management',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          const SizedBox(height: 8),
-          const Text('Manage your crops and get recommendations...'),
-        ],
-      ),
-    );
-  }
-}
-
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.person, size: 64),
-          const SizedBox(height: 16),
-          Text(
-            'User Profile',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          const SizedBox(height: 8),
-          const Text('Your profile information...'),
         ],
       ),
     );
