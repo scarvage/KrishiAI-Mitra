@@ -1,0 +1,1 @@
+ /Users/nidhigond/AndroidStudioProjects/krishiMitra/.dart_tool/flutter_build/1fa50984ff999263a02d65b06c81224f/dart_build_result.json:  /Users/nidhigond/AndroidStudioProjects/krishiMitra/.dart_tool/package_config.json /Users/nidhigond/AndroidStudioProjects/krishiMitra/pubspec.yaml /Users/nidhigond/development/flutter/bin/cache/dart-sdk/version
