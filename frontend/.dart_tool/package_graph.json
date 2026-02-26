@@ -13,6 +13,8 @@
         "flutter_local_notifications",
         "geolocator",
         "google_fonts",
+        "hive",
+        "hive_flutter",
         "http",
         "image_picker",
         "intl",
@@ -116,6 +118,24 @@
         "flutter",
         "http",
         "path_provider"
+      ]
+    },
+    {
+      "name": "hive_flutter",
+      "version": "1.1.0",
+      "dependencies": [
+        "flutter",
+        "hive",
+        "path",
+        "path_provider"
+      ]
+    },
+    {
+      "name": "hive",
+      "version": "2.2.3",
+      "dependencies": [
+        "crypto",
+        "meta"
       ]
     },
     {
