@@ -10,12 +10,17 @@ const priceRoutes = require('./api/routes/priceRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const HOST = '0.0.0.0';
 
 // ---------------------------------------------------------------------------
 // Middleware
 // ---------------------------------------------------------------------------
 
-app.use(cors());
+const isProduction = process.env.NODE_ENV === 'production';
+
+app.use(cors({
+  origin: isProduction ? process.env.CORS_ORIGIN || '*' : '*',
+}));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
@@ -45,7 +50,24 @@ app.use((_req, res) => {
 // Global error handler
 app.use((err, _req, res, _next) => {
   logger.error('Unhandled error', { error: err.message, stack: err.stack });
-  res.status(500).json({ success: false, error: 'Internal server error' });
+  res.status(err.status || 500).json({
+    success: false,
+    error: isProduction ? 'Internal server error' : err.message,
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Process-level error handlers (production safety net)
+// ---------------------------------------------------------------------------
+
+process.on('uncaughtException', (err) => {
+  logger.error('Uncaught exception — shutting down', { error: err.message, stack: err.stack });
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason) => {
+  logger.error('Unhandled rejection — shutting down', { reason: String(reason) });
+  process.exit(1);
 });
 
 // ---------------------------------------------------------------------------
@@ -55,8 +77,8 @@ app.use((err, _req, res, _next) => {
 const start = async () => {
   try {
     await connectDB();
-    app.listen(PORT, () => {
-      logger.info(`KrishiAI Mitra backend running on port ${PORT}`);
+    app.listen(PORT, HOST, () => {
+      logger.info(`KrishiAI Mitra backend running on ${HOST}:${PORT} (${process.env.NODE_ENV || 'development'})`);
       logger.info('Routes available:');
       logger.info('  GET /health');
       logger.info('  GET /api/price/mandi?crop=<crop>&state=<state>');
