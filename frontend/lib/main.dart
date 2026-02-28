@@ -23,7 +23,7 @@ void main() async {
 
   final voiceProvider = VoiceProvider();
   final diseaseProvider = DiseaseProvider();
-  final mandiProvider = MandiProvider()..loadPrices();
+  final mandiProvider = MandiProvider();
 
   // Sync all feature providers whenever the global language changes.
   void syncLanguage() {
