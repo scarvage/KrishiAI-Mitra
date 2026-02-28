@@ -1,34 +1,41 @@
-import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 import '../models/mandi_price.dart';
-import '../utils/mock_data.dart';
+import '../utils/constants.dart';
 
 class MandiService {
-  // Returns the full list of mock mandi prices
-  Future<List<MandiPrice>> getPrices({String? state}) async {
-    // Check cache: if last fetch < 30 minutes ago, return cached
-    final prefs = await SharedPreferences.getInstance();
-    final lastFetch = prefs.getInt('mandi_last_fetch') ?? 0;
-    final now = DateTime.now().millisecondsSinceEpoch;
+  /// Fetch mandi prices for the given [crop] and [state] from the backend.
+  /// [languageCode] is sent as the Accept-Language header so the AI
+  /// recommendation is generated in the user's selected language.
+  Future<MandiApiResponse> fetchMandiPrices({
+    required String crop,
+    required String state,
+    required String languageCode,
+    int limit = 20,
+  }) async {
+    final uri = Uri.parse('$kBackendBaseUrl/api/price/mandi').replace(
+      queryParameters: {
+        'crop': crop,
+        'state': state,
+        'limit': limit.toString(),
+      },
+    );
 
-    // Cache hit - return immediately without delay
-    if (now - lastFetch < 1800000) {
-      final prices = mockMandiPrices.map((m) => MandiPrice.fromMap(m)).toList();
-      if (state != null) {
-        return prices.where((p) => p.state == state).toList();
-      }
-      return prices;
+    final response = await http.get(
+      uri,
+      headers: {
+        'Accept-Language': languageCode,
+        'Content-Type': 'application/json',
+      },
+    ).timeout(const Duration(seconds: 15));
+
+    if (response.statusCode != 200) {
+      final body = jsonDecode(response.body) as Map<String, dynamic>;
+      throw Exception(body['error'] ?? 'Failed to fetch mandi prices');
     }
 
-    // Cache miss - simulate network fetch
-    await Future.delayed(const Duration(seconds: 1));
-    await prefs.setInt('mandi_last_fetch', now);
-
-    // Filter by state if provided
-    final prices = mockMandiPrices.map((m) => MandiPrice.fromMap(m)).toList();
-    if (state != null) {
-      return prices.where((p) => p.state == state).toList();
-    }
-    return prices;
+    final json = jsonDecode(response.body) as Map<String, dynamic>;
+    return MandiApiResponse.fromJson(json);
   }
 }

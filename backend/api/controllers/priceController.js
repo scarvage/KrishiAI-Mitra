@@ -1,53 +1,21 @@
 const mandiService = require('../services/mandiService');
-const cacheService = require('../services/cacheService');
+const bedrockService = require('../services/bedrockService');
 const PriceQuery = require('../models/PriceQuery');
 const { successResponse, errorResponse } = require('../utils/response');
 const logger = require('../utils/logger');
 
-const CACHE_TTL_SECONDS = 6 * 60 * 60; // 6 hours
-const STALE_THRESHOLD_MS = 24 * 60 * 60 * 1000; // 24 hours
+const SUPPORTED_LANGUAGES = ['hi', 'en', 'pa', 'mr', 'gu', 'bn', 'te', 'ta', 'kn', 'ml', 'or', 'ur'];
 
 /**
- * Generate a sell/hold recommendation based on price spread across mandis.
- * Logic:
- *   - Compare the most recent 3 entries vs overall average.
- *   - trend > 5% → prices trending up → Hold
- *   - trend < -5% → prices falling → Sell now
- *   - otherwise   → prices stable → Good time to sell
- *
- * @param {Array} prices
+ * Extract and validate language code from Accept-Language header.
+ * Falls back to 'hi' (Hindi) if not provided or unsupported.
+ * @param {string|undefined} header
  * @returns {string}
  */
-const generateRecommendation = (prices) => {
-  if (!prices || prices.length === 0) {
-    return 'No price data available. Please try a different crop or check back later.';
-  }
-
-  const avgPrice = prices.reduce((sum, p) => sum + p.modal_price, 0) / prices.length;
-
-  const recent = prices.slice(0, Math.min(3, prices.length));
-  const recentAvg = recent.reduce((sum, p) => sum + p.modal_price, 0) / recent.length;
-
-  const trendPct = ((recentAvg - avgPrice) / avgPrice) * 100;
-
-  if (trendPct > 5) {
-    return 'Prices are trending upward. Consider holding your produce for better rates.';
-  } else if (trendPct < -5) {
-    return 'Prices are declining. Sell now to avoid further price drops.';
-  } else {
-    return 'Prices are stable. This is a good time to sell at current market rates.';
-  }
-};
-
-/**
- * Check if the last updated date is considered stale (older than 24 hours).
- * @param {string} lastUpdated - ISO date string or date string
- * @returns {boolean}
- */
-const isStale = (lastUpdated) => {
-  if (!lastUpdated) return true;
-  const diff = Date.now() - new Date(lastUpdated).getTime();
-  return diff > STALE_THRESHOLD_MS;
+const parseLanguageCode = (header) => {
+  if (!header) return 'hi';
+  const code = header.split(/[,;]/)[0].trim().split('-')[0].toLowerCase();
+  return SUPPORTED_LANGUAGES.includes(code) ? code : 'hi';
 };
 
 /**
@@ -56,10 +24,13 @@ const isStale = (lastUpdated) => {
  *   - crop   (string, required) - e.g. "Wheat"
  *   - state  (string, optional) - e.g. "Punjab"
  *   - limit  (number, optional) - max results (default 20, max 50)
+ * Headers:
+ *   - Accept-Language (string, optional) - e.g. "hi", "en", "pa" — default "hi"
  */
 const getMandiPrices = async (req, res) => {
   try {
     const { crop, state, limit: limitParam } = req.query;
+    const languageCode = parseLanguageCode(req.headers['accept-language']);
 
     // Validate required param
     if (!crop || crop.trim() === '') {
@@ -70,48 +41,34 @@ const getMandiPrices = async (req, res) => {
     const stateClean = state ? state.trim() : null;
     const limit = Math.min(parseInt(limitParam, 10) || 20, 50);
 
-    // Build cache key: price:wheat:punjab  or  price:wheat:all
-    const cacheKey = `price:${cropClean.toLowerCase()}:${(stateClean || 'all').toLowerCase()}`;
-
-    // --- Cache check ---
-    const cached = cacheService.get(cacheKey);
-    if (cached) {
-      logger.info('Serving cached mandi prices', { cacheKey });
-      return successResponse(res, {
-        ...cached,
-        cached: true,
-        stale: isStale(cached.lastUpdated),
-      });
-    }
-
     // --- Live fetch from Data.gov.in ---
     const { prices, lastUpdated } = await mandiService.fetchMandiPrices(cropClean, stateClean, limit);
 
-    const recommendation = generateRecommendation(prices);
+    // --- AI recommendation via Amazon Bedrock (Claude) ---
+    const recommendation = await bedrockService.generateMandiRecommendation(
+      cropClean,
+      stateClean,
+      prices,
+      languageCode
+    );
 
     const result = {
       crop: cropClean,
       state: stateClean,
       prices,
       recommendation,
+      language: languageCode,
       lastUpdated,
-      cached: false,
-      stale: isStale(lastUpdated),
       totalMandis: prices.length,
     };
 
-    // --- Persist to MongoDB (fire-and-forget, don't block response) ---
+    // --- Persist to MongoDB (fire-and-forget, non-blocking) ---
     PriceQuery.create({
       crop: cropClean.toLowerCase(),
       state: stateClean,
       pricesCount: prices.length,
       recommendation,
     }).catch((err) => logger.error('Failed to save price query to DB', { error: err.message }));
-
-    // --- Cache result ---
-    if (prices.length > 0) {
-      cacheService.set(cacheKey, result, CACHE_TTL_SECONDS);
-    }
 
     return successResponse(res, result);
   } catch (error) {
@@ -122,15 +79,12 @@ const getMandiPrices = async (req, res) => {
 
 /**
  * GET /api/price/crops
- * Returns the list of supported crops.
+ * Returns the list of 10 major supported crops.
  */
 const getSupportedCrops = (req, res) => {
   const crops = [
-    'Wheat', 'Rice', 'Paddy', 'Cotton', 'Sugarcane',
-    'Tomato', 'Potato', 'Onion', 'Maize', 'Soybean',
-    'Groundnut', 'Mustard', 'Chilli', 'Garlic', 'Ginger',
-    'Turmeric', 'Lentil', 'Chickpea', 'Moong', 'Urad',
-    'Arhar', 'Bajra', 'Jowar', 'Ragi', 'Sunflower',
+    'Wheat', 'Rice', 'Cotton', 'Sugarcane', 'Maize',
+    'Soybean', 'Onion', 'Potato', 'Tomato', 'Mustard',
   ];
   return successResponse(res, { crops });
 };
@@ -143,7 +97,6 @@ const healthCheck = (req, res) => {
   return successResponse(res, {
     service: 'price-checker',
     status: 'ok',
-    cacheStats: cacheService.stats(),
   });
 };
 

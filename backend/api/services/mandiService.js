@@ -46,6 +46,21 @@ const normalizeCrop = (crop) => {
 };
 
 /**
+ * Parse DD/MM/YYYY date string (from Data.gov.in) to a JS Date.
+ * Returns null if parsing fails.
+ * @param {string} dateStr - e.g. "28/02/2026"
+ * @returns {Date|null}
+ */
+const parseArrivalDate = (dateStr) => {
+  if (!dateStr) return null;
+  const parts = dateStr.split('/');
+  if (parts.length !== 3) return null;
+  const [dd, mm, yyyy] = parts;
+  const d = new Date(`${yyyy}-${mm}-${dd}`);
+  return isNaN(d.getTime()) ? null : d;
+};
+
+/**
  * Fetch mandi prices from Data.gov.in Agmarknet API.
  * @param {string} crop  - Crop name (e.g. "Wheat", "Rice")
  * @param {string|null} state - Optional state filter (e.g. "Punjab")
@@ -82,25 +97,31 @@ const fetchMandiPrices = async (crop, state = null, limit = 20) => {
     const records = response.data?.records || [];
 
     const prices = records
-      .map((record) => ({
-        mandi: record.market || 'Unknown',
-        state: record.state || '',
-        district: record.district || '',
-        commodity: record.commodity || commodityName,
-        variety: record.variety || '',
-        modal_price: parseFloat(record.modal_price) || 0,
-        min_price: parseFloat(record.min_price) || 0,
-        max_price: parseFloat(record.max_price) || 0,
-        arrival_date: record.arrival_date || null,
-      }))
+      .map((record) => {
+        const parsedDate = parseArrivalDate(record.arrival_date);
+        return {
+          mandi: record.market || 'Unknown',
+          state: record.state || '',
+          district: record.district || '',
+          commodity: record.commodity || commodityName,
+          variety: record.variety || '',
+          modal_price: parseFloat(record.modal_price) || 0,
+          min_price: parseFloat(record.min_price) || 0,
+          max_price: parseFloat(record.max_price) || 0,
+          arrival_date: parsedDate ? parsedDate.toISOString().split('T')[0] : record.arrival_date || null,
+          _parsedDate: parsedDate,
+        };
+      })
       // Filter out records with no price data
       .filter((p) => p.modal_price > 0)
       // Sort most recent first
       .sort((a, b) => {
-        if (!a.arrival_date) return 1;
-        if (!b.arrival_date) return -1;
-        return new Date(b.arrival_date) - new Date(a.arrival_date);
-      });
+        if (!a._parsedDate) return 1;
+        if (!b._parsedDate) return -1;
+        return b._parsedDate - a._parsedDate;
+      })
+      // Remove internal _parsedDate field
+      .map(({ _parsedDate, ...rest }) => rest);
 
     const lastUpdated = prices.length > 0 ? prices[0].arrival_date : new Date().toISOString();
 
