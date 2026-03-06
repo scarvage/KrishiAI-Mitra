@@ -46,20 +46,26 @@ class _VoiceChatScreenState extends State<VoiceChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('कृषि मित्र AI'),
+        title: Consumer<VoiceProvider>(
+          builder: (context, provider, _) {
+            return Text(provider.language == 'hi' ? 'कृषि मित्र AI' : 'Krishi Mitra AI');
+          },
+        ),
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         elevation: 0,
         actions: [
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Consumer<VoiceProvider>(
-              builder: (context, provider, _) {
-                return LanguageToggle(
-                  currentLanguage: provider.language,
-                  onToggle: () => provider.toggleLanguage(),
-                );
-              },
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 12),
+              child: Consumer<VoiceProvider>(
+                builder: (context, provider, _) {
+                  return LanguageToggle(
+                    currentLanguage: provider.language,
+                    onToggle: () => provider.toggleLanguage(),
+                  );
+                },
+              ),
             ),
           ),
         ],
@@ -115,33 +121,69 @@ class _VoiceChatScreenState extends State<VoiceChatScreen> {
                     ),
                   ),
                 ),
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                padding: EdgeInsets.fromLTRB(0, 16, 0, 16 + MediaQuery.of(context).padding.bottom),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      provider.isListening
-                          ? 'सुन रहा हूँ...'
-                          : 'माइक दबाएं और बोलें',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: AppColors.textSecondary.withOpacity(0.7),
+                    // Live partial transcript or status hint
+                    if (provider.isListening &&
+                        provider.partialText != null &&
+                        provider.partialText!.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: Text(
+                          provider.partialText!,
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontStyle: FontStyle.italic,
+                            color: AppColors.primary.withOpacity(0.9),
+                          ),
+                        ),
+                      )
+                    else
+                      Text(
+                        provider.isListening
+                            ? (provider.language == 'hi' ? 'सुन रहा हूँ...' : 'Listening...')
+                            : (provider.speechAvailable
+                                ? (provider.language == 'hi' ? 'माइक दबाएं और बोलें' : 'Tap mic and speak')
+                                : (provider.language == 'hi' ? 'माइक उपलब्ध नहीं — अनुमति दें' : 'Mic unavailable — grant permission')),
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: provider.speechAvailable
+                              ? AppColors.textSecondary.withOpacity(0.7)
+                              : AppColors.warning,
+                        ),
                       ),
-                    ),
+                    if (!provider.speechAvailable)
+                      TextButton(
+                        onPressed: () => provider.retryMicPermission(),
+                        child: Text(provider.language == 'hi' ? 'अनुमति दें' : 'Grant Permission'),
+                      ),
                     const SizedBox(height: 12),
                     GestureDetector(
-                      onTap: provider.isListening
+                      onTap: provider.isThinking
                           ? null
-                          : () => provider.startListening(),
+                          : () {
+                              if (provider.isListening) {
+                                provider.stopListening();
+                              } else {
+                                provider.startListening();
+                              }
+                            },
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 300),
                         width: provider.isListening ? 90 : 80,
                         height: provider.isListening ? 90 : 80,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: provider.isListening
-                              ? AppColors.warning
-                              : AppColors.primary,
+                          color: provider.isThinking
+                              ? Colors.grey
+                              : (provider.isListening
+                                  ? AppColors.warning
+                                  : AppColors.primary),
                           boxShadow: [
                             if (provider.isListening)
                               BoxShadow(

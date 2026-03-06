@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../utils/app_colors.dart';
-
 class LanguageToggle extends StatelessWidget {
   final String currentLanguage;
   final VoidCallback onToggle;
@@ -16,54 +14,53 @@ class LanguageToggle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.grey.shade200,
-        borderRadius: BorderRadius.circular(12),
+        color: Colors.white.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(10),
       ),
-      padding: const EdgeInsets.all(4),
+      padding: const EdgeInsets.all(3),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           GestureDetector(
             onTap: currentLanguage != 'hi' ? onToggle : null,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
                 color: currentLanguage == 'hi'
-                    ? AppColors.primary
+                    ? Colors.white
                     : Colors.transparent,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
                 'हिंदी',
                 style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
                   color: currentLanguage == 'hi'
-                      ? Colors.white
-                      : AppColors.textSecondary,
+                      ? Colors.black87
+                      : Colors.white,
                 ),
               ),
             ),
           ),
-          const SizedBox(width: 4),
           GestureDetector(
             onTap: currentLanguage != 'en' ? onToggle : null,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
                 color: currentLanguage == 'en'
-                    ? AppColors.primary
+                    ? Colors.white
                     : Colors.transparent,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
                 'English',
                 style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
                   color: currentLanguage == 'en'
-                      ? Colors.white
-                      : AppColors.textSecondary,
+                      ? Colors.black87
+                      : Colors.white,
                 ),
               ),
             ),
