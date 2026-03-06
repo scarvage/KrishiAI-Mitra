@@ -53,18 +53,39 @@ class DiseaseResult {
 
     final String icon;
     final String cropType = (data['cropType'] as String?) ?? 'Unknown';
-    if (cropType.toLowerCase().contains('tomato')) {
+    final cropLower = cropType.toLowerCase();
+    if (cropLower.contains('tomato')) {
       icon = '🍅';
-    } else if (cropType.toLowerCase().contains('potato')) {
+    } else if (cropLower.contains('potato')) {
       icon = '🥔';
-    } else if (cropType.toLowerCase().contains('wheat')) {
+    } else if (cropLower.contains('wheat')) {
       icon = '🌾';
-    } else if (cropType.toLowerCase().contains('rice')) {
+    } else if (cropLower.contains('rice')) {
       icon = '🍚';
-    } else if (cropType.toLowerCase().contains('maize') || cropType.toLowerCase().contains('corn')) {
+    } else if (cropLower.contains('maize') || cropLower.contains('corn')) {
       icon = '🌽';
-    } else if (cropType.toLowerCase().contains('apple')) {
+    } else if (cropLower.contains('apple')) {
       icon = '🍎';
+    } else if (cropLower.contains('grape')) {
+      icon = '🍇';
+    } else if (cropLower.contains('orange') || cropLower.contains('citrus')) {
+      icon = '🍊';
+    } else if (cropLower.contains('cherry')) {
+      icon = '🍒';
+    } else if (cropLower.contains('peach')) {
+      icon = '🍑';
+    } else if (cropLower.contains('strawberry')) {
+      icon = '🍓';
+    } else if (cropLower.contains('pepper')) {
+      icon = '🫑';
+    } else if (cropLower.contains('blueberry')) {
+      icon = '🫐';
+    } else if (cropLower.contains('soybean')) {
+      icon = '🫘';
+    } else if (cropLower.contains('squash')) {
+      icon = '🎃';
+    } else if (cropLower.contains('raspberry')) {
+      icon = '🫐';
     } else if (severity == 'none') {
       icon = '✅';
     } else {
