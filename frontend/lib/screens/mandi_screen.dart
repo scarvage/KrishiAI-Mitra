@@ -143,9 +143,9 @@ class _SelectionViewState extends State<_SelectionView> {
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 2.8,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
+              childAspectRatio: MediaQuery.of(context).size.width > 600 ? 3.2 : 2.8,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
             ),

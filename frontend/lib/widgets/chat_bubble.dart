@@ -16,8 +16,8 @@ class ChatBubble extends StatelessWidget {
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Padding(
         padding: EdgeInsets.only(
-          left: isUser ? 60 : 16,
-          right: isUser ? 16 : 60,
+          left: isUser ? MediaQuery.of(context).size.width * 0.18 : 16,
+          right: isUser ? 16 : MediaQuery.of(context).size.width * 0.18,
           top: 8,
           bottom: 8,
         ),

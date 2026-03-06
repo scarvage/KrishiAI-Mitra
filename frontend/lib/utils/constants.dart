@@ -1,7 +1,16 @@
-// Backend base URL — change this to your deployed server address
-// For local development use your machine's LAN IP (e.g. http://192.168.1.x:3000)
-// For Android emulator use http://10.0.2.2:3000
-const String kBackendBaseUrl = 'http://192.168.1.43:3000';
+// ─── Environment Switch ───────────────────────────────────────────────────────
+// Set to true  → uses your local dev server
+// Set to false → uses the production server URL
+const bool kUseLocalServer = true;
+
+// Local dev URLs:
+//   Physical device on same WiFi → your machine's LAN IP (find with `ifconfig | grep 192`)
+//   Android emulator             → http://10.0.2.2:3000
+//   iOS simulator                → http://localhost:3000
+const String _kLocalUrl = 'http://192.168.1.3:3000';
+const String _kProductionUrl = 'http://52.72.248.60:3000'; // TODO: replace when deployed
+
+const String kBackendBaseUrl = kUseLocalServer ? _kLocalUrl : _kProductionUrl;
 
 // 10 major crops with display names and emoji icons
 const List<Map<String, String>> kMajorCrops = [

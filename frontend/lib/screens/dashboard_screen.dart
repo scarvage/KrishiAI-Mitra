@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/language_provider.dart';
+import '../providers/weather_provider.dart';
 import '../utils/app_colors.dart';
 import '../widgets/feature_card.dart';
 import '../widgets/language_selection_dialog.dart';
@@ -9,8 +10,21 @@ import 'disease_screen.dart';
 import 'mandi_screen.dart';
 import 'voice_chat_screen.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<WeatherProvider>().loadWeather();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +43,7 @@ class DashboardScreen extends StatelessWidget {
                   end: Alignment.bottomRight,
                 ),
               ),
-              padding: const EdgeInsets.fromLTRB(20, 40, 20, 24),
+              padding: EdgeInsets.fromLTRB(20, MediaQuery.of(context).padding.top + 16, 20, 24),
               child: Consumer<LanguageProvider>(
                 builder: (context, langProvider, _) => Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,31 +108,46 @@ class DashboardScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        const Icon(Icons.location_on,
-                            color: Colors.white, size: 18),
-                        const SizedBox(width: 6),
-                        const Text(
-                          'Indore, MP',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const Spacer(),
-                        const Icon(Icons.cloud, color: Colors.white, size: 20),
-                        const SizedBox(width: 8),
-                        const Text(
-                          '28°C',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
+                    Consumer<WeatherProvider>(
+                      builder: (context, weather, _) {
+                        final locationText =
+                            weather.status == WeatherStatus.loaded
+                                ? weather.weatherData!.locationName
+                                : 'Loading...';
+                        final tempText =
+                            weather.status == WeatherStatus.loaded
+                                ? '${weather.weatherData!.temperature.round()}°C'
+                                : weather.status == WeatherStatus.error
+                                    ? '--°C'
+                                    : '...';
+                        return Row(
+                          children: [
+                            const Icon(Icons.location_on,
+                                color: Colors.white, size: 18),
+                            const SizedBox(width: 6),
+                            Text(
+                              locationText,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const Spacer(),
+                            const Icon(Icons.cloud,
+                                color: Colors.white, size: 20),
+                            const SizedBox(width: 8),
+                            Text(
+                              tempText,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -272,25 +301,39 @@ class DashboardScreen extends StatelessWidget {
                     height: 40,
                     color: Colors.grey.shade300,
                   ),
-                  Column(
-                    children: [
-                      const Text(
-                        '28°C',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.primary,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Weather',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: AppColors.textSecondary.withOpacity(0.6),
-                        ),
-                      ),
-                    ],
+                  Consumer<WeatherProvider>(
+                    builder: (context, weather, _) {
+                      final tempText =
+                          weather.status == WeatherStatus.loaded
+                              ? '${weather.weatherData!.temperature.round()}°C'
+                              : weather.status == WeatherStatus.loading
+                                  ? '...'
+                                  : '--°C';
+                      final conditionText =
+                          weather.status == WeatherStatus.loaded
+                              ? weather.weatherData!.condition
+                              : 'Weather';
+                      return Column(
+                        children: [
+                          Text(
+                            tempText,
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            conditionText,
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: AppColors.textSecondary.withOpacity(0.6),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ],
               ),
