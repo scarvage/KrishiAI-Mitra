@@ -926,11 +926,15 @@ const classifyDisease = async (imageBuffer) => {
   const entry = TREATMENT_DB[dbKey] || TREATMENT_DB['default'];
   const lowConfidence = confidence < 0.6;
 
-  // Use the matched DB key for the display name so it stays consistent
-  // with the Hindi name and treatments (the raw HF label may be a different crop).
-  const diseaseName = dbKey !== 'default'
-    ? dbKey.replace(/___/g, ' - ').replace(/_/g, ' ')
-    : rawLabel.replace(/___/g, ' - ').replace(/_/g, ' ');
+  // Extract only the disease part (after ___), dropping the crop name
+  let diseaseName;
+  if (dbKey !== 'default' && dbKey.includes('___')) {
+    diseaseName = dbKey.split('___')[1].replace(/_/g, ' ');
+  } else if (dbKey === 'default') {
+    diseaseName = rawLabel.replace(/___/g, ' - ').replace(/_/g, ' ');
+  } else {
+    diseaseName = dbKey.replace(/_/g, ' ');
+  }
 
   return {
     diseaseName,

@@ -298,24 +298,6 @@ class _ResultState extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 16),
-          // Crop type
-          Text(
-            isHi ? 'फसल का प्रकार' : 'Crop Type',
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            result.cropType,
-            style: TextStyle(
-              fontSize: 14,
-              color: AppColors.textSecondary.withOpacity(0.8),
-            ),
-          ),
           const SizedBox(height: 20),
           // Treatment steps
           Text(
