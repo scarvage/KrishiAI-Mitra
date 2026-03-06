@@ -1,7 +1,7 @@
 // ─── Environment Switch ───────────────────────────────────────────────────────
 // Set to true  → uses your local dev server
 // Set to false → uses the production server URL
-const bool kUseLocalServer = true;
+const bool kUseLocalServer = false;
 
 // Local dev URLs:
 //   Physical device on same WiFi → your machine's LAN IP (find with `ifconfig | grep 192`)

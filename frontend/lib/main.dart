@@ -135,31 +135,33 @@ class _HomePageState extends State<HomePage> {
         index: _selectedIndex,
         children: _pages,
       ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _selectedIndex,
-        onDestinationSelected: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.home_rounded),
-            label: 'होम',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.mic_rounded),
-            label: 'आवाज़',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.camera_alt_rounded),
-            label: 'रोग',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.trending_up_rounded),
-            label: 'मंडी',
-          ),
-        ],
+      bottomNavigationBar: Consumer<LanguageProvider>(
+        builder: (context, langProvider, _) => NavigationBar(
+          selectedIndex: _selectedIndex,
+          onDestinationSelected: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+          destinations: [
+            NavigationDestination(
+              icon: const Icon(Icons.home_rounded),
+              label: langProvider.t('nav_home'),
+            ),
+            NavigationDestination(
+              icon: const Icon(Icons.mic_rounded),
+              label: langProvider.t('nav_voice'),
+            ),
+            NavigationDestination(
+              icon: const Icon(Icons.camera_alt_rounded),
+              label: langProvider.t('nav_disease'),
+            ),
+            NavigationDestination(
+              icon: const Icon(Icons.trending_up_rounded),
+              label: langProvider.t('nav_mandi'),
+            ),
+          ],
+        ),
       ),
     );
   }
