@@ -41,6 +41,10 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>कृषि मित्र को आपके सवाल सुनने के लिए माइक्रोफ़ोन की जरूरत है।</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>कृषि मित्र आपकी आवाज़ को समझने के लिए स्पीच रेकग्निशन का उपयोग करता है।</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

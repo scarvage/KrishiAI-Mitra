@@ -7,6 +7,8 @@ const logger = require('./api/utils/logger');
 
 // Route modules
 const priceRoutes = require('./api/routes/priceRoutes');
+const voiceRoutes = require('./api/routes/voiceRoutes');
+const diseaseRoutes = require('./api/routes/diseaseRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -41,6 +43,8 @@ app.get('/health', (_req, res) => {
 
 // Feature routes
 app.use('/api/price', priceRoutes);
+app.use('/api/voice', voiceRoutes);
+app.use('/api/disease', diseaseRoutes);
 
 // 404 handler
 app.use((_req, res) => {
@@ -84,6 +88,10 @@ const start = async () => {
       logger.info('  GET /api/price/mandi?crop=<crop>&state=<state>');
       logger.info('  GET /api/price/crops');
       logger.info('  GET /api/price/health');
+      logger.info('  POST /api/voice/query');
+      logger.info('  GET  /api/voice/health');
+      logger.info('  POST /api/disease/detect');
+      logger.info('  GET  /api/disease/health');
     });
   } catch (error) {
     logger.error('Failed to start server', { error: error.message });

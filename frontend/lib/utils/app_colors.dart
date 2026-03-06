@@ -31,4 +31,8 @@ class AppColors {
   static const Color severityMedium = Color(0xFFFF9800); // Orange
   static const Color severityLow = Color(0xFFFFC107);    // Amber
   static const Color severityNone = Color(0xFF4CAF50);   // Green
+
+  // Status aliases
+  static const Color error = Color(0xFFF44336);
+  static const Color success = Color(0xFF4CAF50);
 }

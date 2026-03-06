@@ -7,6 +7,7 @@ import 'providers/disease_provider.dart';
 import 'providers/language_provider.dart';
 import 'providers/mandi_provider.dart';
 import 'providers/voice_provider.dart';
+import 'providers/weather_provider.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/disease_screen.dart';
 import 'screens/mandi_screen.dart';
@@ -24,6 +25,7 @@ void main() async {
   final voiceProvider = VoiceProvider();
   final diseaseProvider = DiseaseProvider();
   final mandiProvider = MandiProvider();
+  final weatherProvider = WeatherProvider();
 
   // Sync all feature providers whenever the global language changes.
   void syncLanguage() {
@@ -44,6 +46,7 @@ void main() async {
         ChangeNotifierProvider<VoiceProvider>.value(value: voiceProvider),
         ChangeNotifierProvider<DiseaseProvider>.value(value: diseaseProvider),
         ChangeNotifierProvider<MandiProvider>.value(value: mandiProvider),
+        ChangeNotifierProvider<WeatherProvider>.value(value: weatherProvider),
       ],
       child: const KrishiMitraApp(),
     ),
