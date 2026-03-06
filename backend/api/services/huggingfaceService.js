@@ -73,6 +73,37 @@ const TREATMENT_DB = {
     en: ['Crop appears healthy. Continue regular monitoring and balanced fertilization.'],
     hi: ['फसल स्वस्थ दिखती है। नियमित निगरानी और संतुलित खाद जारी रखें।'],
   },
+  'blueberry___healthy': {
+    nameHindi: 'स्वस्थ ब्लूबेरी',
+    cropType: 'Blueberry',
+    severity: 'none',
+    en: ['Blueberry plant looks healthy. Continue regular care and monitoring.'],
+    hi: ['ब्लूबेरी का पौधा स्वस्थ दिखता है। नियमित देखभाल और निगरानी जारी रखें।'],
+  },
+  'cherry___powdery_mildew': {
+    nameHindi: 'चेरी का चूर्णिल आसिता',
+    cropType: 'Cherry',
+    severity: 'medium',
+    en: [
+      'Apply Sulfur-based fungicide @ 3g/L at first sign of white powdery growth',
+      'Prune infected shoots and improve air circulation',
+      'Avoid excessive nitrogen fertilization',
+      'Apply Myclobutanil @ 1ml/L for severe infections',
+    ],
+    hi: [
+      'सफेद चूर्णी वृद्धि के पहले लक्षण पर सल्फर आधारित कवकनाशी @ 3 ग्राम/लीटर स्प्रे करें',
+      'संक्रमित शाखाओं को काटें और हवा का संचार सुधारें',
+      'अत्यधिक नाइट्रोजन खाद से बचें',
+      'गंभीर संक्रमण के लिए माइक्लोब्यूटानिल @ 1 मिली/लीटर स्प्रे करें',
+    ],
+  },
+  'cherry___healthy': {
+    nameHindi: 'स्वस्थ चेरी',
+    cropType: 'Cherry',
+    severity: 'none',
+    en: ['Cherry plant looks healthy. Continue regular care and monitoring.'],
+    hi: ['चेरी का पौधा स्वस्थ दिखता है। नियमित देखभाल और निगरानी जारी रखें।'],
+  },
   'corn_(maize)___cercospora_leaf_spot gray_leaf_spot': {
     nameHindi: 'मक्का का भूरा धब्बा',
     cropType: 'Maize',
@@ -142,12 +173,111 @@ const TREATMENT_DB = {
       'बेलों को हवा के लिए प्रशिक्षित करें',
     ],
   },
+  'grape___esca': {
+    nameHindi: 'अंगूर का एस्का (काला खसरा)',
+    cropType: 'Grape',
+    severity: 'high',
+    en: [
+      'Remove and destroy severely infected vines',
+      'Prune during dry weather to prevent wound infections',
+      'Apply wound sealant after pruning cuts',
+      'Avoid excessive irrigation stress on vines',
+    ],
+    hi: [
+      'गंभीर रूप से संक्रमित बेलें हटाकर नष्ट करें',
+      'घाव संक्रमण रोकने के लिए सूखे मौसम में छंटाई करें',
+      'छंटाई के बाद घाव सीलेंट लगाएं',
+      'बेलों पर अत्यधिक सिंचाई तनाव से बचें',
+    ],
+  },
+  'grape___isariopsis_leaf_spot': {
+    nameHindi: 'अंगूर का इसारियोप्सिस पत्ती धब्बा',
+    cropType: 'Grape',
+    severity: 'medium',
+    en: [
+      'Apply Mancozeb 75 WP @ 2.5g/L at first sign of spots',
+      'Remove and destroy infected leaves',
+      'Improve air circulation by proper canopy management',
+      'Avoid overhead irrigation',
+    ],
+    hi: [
+      'धब्बों के पहले लक्षण पर मैन्कोज़ेब 75 WP @ 2.5 ग्राम/लीटर स्प्रे करें',
+      'संक्रमित पत्तियां हटाकर नष्ट करें',
+      'उचित कैनोपी प्रबंधन से हवा संचार सुधारें',
+      'ऊपर से पानी देने से बचें',
+    ],
+  },
   'grape___healthy': {
     nameHindi: 'स्वस्थ अंगूर',
     cropType: 'Grape',
     severity: 'none',
     en: ['Grapevine is healthy. Maintain current spray schedule.'],
     hi: ['अंगूर की बेल स्वस्थ है। वर्तमान स्प्रे कार्यक्रम जारी रखें।'],
+  },
+  'orange___citrus_greening': {
+    nameHindi: 'संतरे का साइट्रस ग्रीनिंग',
+    cropType: 'Orange',
+    severity: 'high',
+    en: [
+      'Remove and destroy infected trees to prevent spread',
+      'Control Asian citrus psyllid vectors with Imidacloprid @ 0.5ml/L',
+      'Use certified disease-free nursery stock for new plantings',
+      'Apply balanced nutrition to maintain tree health',
+    ],
+    hi: [
+      'फैलाव रोकने के लिए संक्रमित पेड़ हटाकर नष्ट करें',
+      'एशियाई साइट्रस सिल्लिड नियंत्रण के लिए इमिडाक्लोप्रिड @ 0.5 मिली/लीटर स्प्रे करें',
+      'नए रोपण के लिए प्रमाणित रोगमुक्त नर्सरी पौधे उपयोग करें',
+      'पेड़ के स्वास्थ्य के लिए संतुलित पोषण दें',
+    ],
+  },
+  'peach___bacterial_spot': {
+    nameHindi: 'आड़ू का जीवाणु धब्बा',
+    cropType: 'Peach',
+    severity: 'medium',
+    en: [
+      'Apply Copper Oxychloride 50 WP @ 3g/L during dormant season',
+      'Prune infected branches to improve air circulation',
+      'Avoid overhead irrigation',
+      'Use disease-resistant peach varieties',
+    ],
+    hi: [
+      'सुप्त अवस्था में कॉपर ऑक्सीक्लोराइड 50 WP @ 3 ग्राम/लीटर स्प्रे करें',
+      'हवा संचार सुधारने के लिए संक्रमित शाखाएं काटें',
+      'ऊपर से पानी देने से बचें',
+      'रोग प्रतिरोधी आड़ू किस्में उपयोग करें',
+    ],
+  },
+  'peach___healthy': {
+    nameHindi: 'स्वस्थ आड़ू',
+    cropType: 'Peach',
+    severity: 'none',
+    en: ['Peach tree looks healthy. Continue regular care and monitoring.'],
+    hi: ['आड़ू का पेड़ स्वस्थ दिखता है। नियमित देखभाल और निगरानी जारी रखें।'],
+  },
+  'bell_pepper___bacterial_spot': {
+    nameHindi: 'शिमला मिर्च का जीवाणु धब्बा',
+    cropType: 'Bell Pepper',
+    severity: 'medium',
+    en: [
+      'Apply Copper Oxychloride 50 WP @ 3g/L every 7-10 days',
+      'Remove infected plant debris from the field',
+      'Use disease-free certified seeds',
+      'Avoid working in fields when plants are wet',
+    ],
+    hi: [
+      'हर 7-10 दिन कॉपर ऑक्सीक्लोराइड 50 WP @ 3 ग्राम/लीटर स्प्रे करें',
+      'खेत से संक्रमित पौधे के अवशेष हटाएं',
+      'प्रमाणित रोगमुक्त बीजों का उपयोग करें',
+      'पौधे गीले हों तब खेत में काम करने से बचें',
+    ],
+  },
+  'bell_pepper___healthy': {
+    nameHindi: 'स्वस्थ शिमला मिर्च',
+    cropType: 'Bell Pepper',
+    severity: 'none',
+    en: ['Bell pepper plant looks healthy. Continue regular care and monitoring.'],
+    hi: ['शिमला मिर्च का पौधा स्वस्थ दिखता है। नियमित देखभाल और निगरानी जारी रखें।'],
   },
   'potato___early_blight': {
     nameHindi: 'आलू का अगेती झुलसा',
@@ -189,6 +319,61 @@ const TREATMENT_DB = {
     severity: 'none',
     en: ['Potato crop is healthy. Maintain balanced fertilization and irrigation.'],
     hi: ['आलू की फसल स्वस्थ है। संतुलित खाद और सिंचाई जारी रखें।'],
+  },
+  'raspberry___healthy': {
+    nameHindi: 'स्वस्थ रास्पबेरी',
+    cropType: 'Raspberry',
+    severity: 'none',
+    en: ['Raspberry plant looks healthy. Continue regular care and monitoring.'],
+    hi: ['रास्पबेरी का पौधा स्वस्थ दिखता है। नियमित देखभाल और निगरानी जारी रखें।'],
+  },
+  'soybean___healthy': {
+    nameHindi: 'स्वस्थ सोयाबीन',
+    cropType: 'Soybean',
+    severity: 'none',
+    en: ['Soybean crop looks healthy. Continue regular care and monitoring.'],
+    hi: ['सोयाबीन की फसल स्वस्थ दिखती है। नियमित देखभाल और निगरानी जारी रखें।'],
+  },
+  'squash___powdery_mildew': {
+    nameHindi: 'कद्दू का चूर्णिल आसिता',
+    cropType: 'Squash',
+    severity: 'medium',
+    en: [
+      'Apply Sulfur-based fungicide @ 3g/L at first sign of white powdery growth',
+      'Remove heavily infected leaves',
+      'Improve air circulation with proper plant spacing',
+      'Avoid overhead irrigation',
+    ],
+    hi: [
+      'सफेद चूर्णी वृद्धि के पहले लक्षण पर सल्फर आधारित कवकनाशी @ 3 ग्राम/लीटर स्प्रे करें',
+      'बुरी तरह संक्रमित पत्तियां हटाएं',
+      'उचित पौध दूरी से हवा संचार सुधारें',
+      'ऊपर से पानी देने से बचें',
+    ],
+  },
+  'strawberry___leaf_scorch': {
+    nameHindi: 'स्ट्रॉबेरी का पत्ती झुलसा',
+    cropType: 'Strawberry',
+    severity: 'medium',
+    en: [
+      'Apply Copper-based fungicide @ 3g/L at first symptom',
+      'Remove and destroy infected leaves',
+      'Improve air circulation with proper plant spacing',
+      'Avoid overhead irrigation; water at the base',
+    ],
+    hi: [
+      'पहले लक्षण पर कॉपर आधारित कवकनाशी @ 3 ग्राम/लीटर स्प्रे करें',
+      'संक्रमित पत्तियां हटाकर नष्ट करें',
+      'उचित पौध दूरी से हवा संचार सुधारें',
+      'ऊपर से पानी देने से बचें; जड़ में पानी दें',
+    ],
+  },
+  'strawberry___healthy': {
+    nameHindi: 'स्वस्थ स्ट्रॉबेरी',
+    cropType: 'Strawberry',
+    severity: 'none',
+    en: ['Strawberry plant looks healthy. Continue regular care and monitoring.'],
+    hi: ['स्ट्रॉबेरी का पौधा स्वस्थ दिखता है। नियमित देखभाल और निगरानी जारी रखें।'],
   },
   'tomato___bacterial_spot': {
     nameHindi: 'टमाटर का जीवाणु धब्बा',
@@ -438,14 +623,66 @@ const TREATMENT_DB = {
 };
 
 /**
+ * Direct mapping from HuggingFace model labels (id2label in config.json)
+ * to TREATMENT_DB keys.  The HF model returns human-readable labels like
+ * "Strawberry with Leaf Scorch", NOT PlantVillage "crop___disease" format.
+ */
+const HF_LABEL_TO_DB_KEY = {
+  'apple scab': 'apple___apple_scab',
+  'apple with black rot': 'apple___black_rot',
+  'cedar apple rust': 'apple___cedar_apple_rust',
+  'healthy apple': 'apple___healthy',
+  'healthy blueberry plant': 'blueberry___healthy',
+  'cherry with powdery mildew': 'cherry___powdery_mildew',
+  'healthy cherry plant': 'cherry___healthy',
+  'corn (maize) with cercospora and gray leaf spot': 'corn_(maize)___cercospora_leaf_spot gray_leaf_spot',
+  'corn (maize) with common rust': 'corn_(maize)___common_rust',
+  'corn (maize) with northern leaf blight': 'corn_(maize)___northern_leaf_blight',
+  'healthy corn (maize) plant': 'corn_(maize)___healthy',
+  'grape with black rot': 'grape___black_rot',
+  'grape with esca (black measles)': 'grape___esca',
+  'grape with isariopsis leaf spot': 'grape___isariopsis_leaf_spot',
+  'healthy grape plant': 'grape___healthy',
+  'orange with citrus greening': 'orange___citrus_greening',
+  'peach with bacterial spot': 'peach___bacterial_spot',
+  'healthy peach plant': 'peach___healthy',
+  'bell pepper with bacterial spot': 'bell_pepper___bacterial_spot',
+  'healthy bell pepper plant': 'bell_pepper___healthy',
+  'potato with early blight': 'potato___early_blight',
+  'potato with late blight': 'potato___late_blight',
+  'healthy potato plant': 'potato___healthy',
+  'healthy raspberry plant': 'raspberry___healthy',
+  'healthy soybean plant': 'soybean___healthy',
+  'squash with powdery mildew': 'squash___powdery_mildew',
+  'strawberry with leaf scorch': 'strawberry___leaf_scorch',
+  'healthy strawberry plant': 'strawberry___healthy',
+  'tomato with bacterial spot': 'tomato___bacterial_spot',
+  'tomato with early blight': 'tomato___early_blight',
+  'tomato with late blight': 'tomato___late_blight',
+  'tomato with leaf mold': 'tomato___leaf_mold',
+  'tomato with septoria leaf spot': 'tomato___septoria_leaf_spot',
+  'tomato with spider mites or two-spotted spider mite': 'tomato___spider_mites two-spotted_spider_mite',
+  'tomato with target spot': 'tomato___target_spot',
+  'tomato yellow leaf curl virus': 'tomato___tomato_yellow_leaf_curl_virus',
+  'tomato mosaic virus': 'tomato___tomato_mosaic_virus',
+  'healthy tomato plant': 'tomato___healthy',
+};
+
+/**
  * Map a HuggingFace label string to the nearest key in TREATMENT_DB.
  */
 const mapLabelToKey = (label) => {
   if (!label) return 'default';
-  const lower = label.toLowerCase();
+  const lower = label.toLowerCase().trim();
 
-  // Exact match first
+  // Exact match against TREATMENT_DB
   if (TREATMENT_DB[lower]) return lower;
+
+  // Direct HF label lookup
+  if (HF_LABEL_TO_DB_KEY[lower]) {
+    const dbKey = HF_LABEL_TO_DB_KEY[lower];
+    if (TREATMENT_DB[dbKey]) return dbKey;
+  }
 
   const fragments = Object.keys(TREATMENT_DB).filter((k) => k !== 'default');
 
@@ -453,7 +690,7 @@ const mapLabelToKey = (label) => {
   for (const key of fragments) {
     const keyParts = key.split('___');
     if (keyParts.length === 2) {
-      const crop = keyParts[0].replace(/_/g, ' ');
+      const crop = keyParts[0].replace(/_/g, ' ').replace(/[()]/g, '');
       const disease = keyParts[1].replace(/_/g, ' ');
       if (lower.includes(crop) && lower.includes(disease)) return key;
     }
@@ -468,8 +705,13 @@ const mapLabelToKey = (label) => {
     }
   }
 
-  // Healthy fallback
+  // Healthy fallback — try to find crop-specific healthy entry
   if (lower.includes('healthy') || lower.includes('normal')) {
+    for (const key of fragments) {
+      if (!key.includes('healthy')) continue;
+      const crop = key.split('___')[0].replace(/_/g, ' ').replace(/[()]/g, '');
+      if (lower.includes(crop)) return key;
+    }
     return 'apple___healthy';
   }
 
@@ -557,16 +799,15 @@ const classifyViaBedrockVision = async (imageBuffer) => {
     credentials: { accessKeyId: accessKey, secretAccessKey: secretKey },
   });
 
-  const textPrompt = `You are a plant pathologist. A farmer uploaded a crop image for disease diagnosis.
-Based on common Indian crop diseases, provide the most likely diagnosis.
-
-Respond with ONLY a JSON object:
-{"disease": "Tomato___Early_blight", "crop": "Tomato", "confidence": 0.65, "healthy": false}
-
-Use PlantVillage dataset label names. Keep confidence between 0.55-0.75 for text-only diagnosis.`;
-
   let body;
-  if (modelId.includes('anthropic') || modelId.includes('claude')) {
+  const isMultimodal = modelId.includes('anthropic') || modelId.includes('claude');
+
+  // Non-multimodal models CANNOT see the image — reject early rather than guess
+  if (!isMultimodal) {
+    throw new Error('Bedrock model is text-only and cannot analyze images. Configure a Claude model via BEDROCK_MODEL_ID or set HUGGINGFACE_API_KEY.');
+  }
+
+  if (isMultimodal) {
     // Claude supports multimodal — send image + text
     const base64Image = imageBuffer.toString('base64');
     body = JSON.stringify({
@@ -599,15 +840,6 @@ If you cannot determine the disease clearly, set confidence below 0.6.`,
         ],
       }],
     });
-  } else if (modelId.includes('gemma') || modelId.includes('google')) {
-    body = JSON.stringify({ messages: [{ role: 'user', content: textPrompt }], max_tokens: 150 });
-  } else if (modelId.includes('meta') || modelId.includes('llama')) {
-    body = JSON.stringify({ prompt: `[INST] ${textPrompt} [/INST]`, max_gen_len: 150, temperature: 0.7 });
-  } else if (modelId.includes('titan')) {
-    body = JSON.stringify({ inputText: textPrompt, textGenerationConfig: { maxTokenCount: 150 } });
-  } else {
-    // OpenAI-chat-compatible fallback
-    body = JSON.stringify({ messages: [{ role: 'user', content: textPrompt }], max_tokens: 150 });
   }
 
   logger.info('Classifying disease via Bedrock', { modelId });
@@ -650,26 +882,32 @@ If you cannot determine the disease clearly, set confidence below 0.6.`,
 const classifyDisease = async (imageBuffer) => {
   let predictions;
 
+  let source = 'none';
+
   // Path 1: HuggingFace (needs HUGGINGFACE_API_KEY — tries models in order)
   const hfKey = process.env.HUGGINGFACE_API_KEY;
   if (hfKey && hfKey.trim() !== '') {
     try {
       predictions = await queryHuggingFace(imageBuffer);
+      source = 'huggingface';
       logger.info('HuggingFace classification success');
     } catch (hfErr) {
       logger.warn('HuggingFace failed, falling back to Bedrock', { error: hfErr.message });
     }
+  } else {
+    logger.warn('HUGGINGFACE_API_KEY not set, skipping HuggingFace');
   }
 
-  // Path 2: Bedrock vision (Claude multimodal or text fallback)
+  // Path 2: Bedrock vision (Claude multimodal only — text models cannot analyze images)
   if (!predictions) {
     try {
       logger.info('Classifying via Bedrock vision');
       predictions = await classifyViaBedrockVision(imageBuffer);
+      source = 'bedrock';
       logger.info('Bedrock vision classification success');
     } catch (bedrockErr) {
       logger.error('Bedrock vision failed', { error: bedrockErr.message });
-      throw new Error('Disease classification unavailable. Please try again later.');
+      throw new Error('Disease classification unavailable. Please ensure HUGGINGFACE_API_KEY is set or BEDROCK_MODEL_ID points to a Claude model.');
     }
   }
 
@@ -681,14 +919,21 @@ const classifyDisease = async (imageBuffer) => {
   const rawLabel = top.label || '';
   const confidence = top.score || 0;
 
-  logger.info('Disease classification result', { label: rawLabel, confidence: confidence.toFixed(2) });
+  logger.info('Disease classification result', { source, label: rawLabel, confidence: confidence.toFixed(2) });
 
   const dbKey = mapLabelToKey(rawLabel);
+  logger.info('Label mapped to DB key', { rawLabel, dbKey });
   const entry = TREATMENT_DB[dbKey] || TREATMENT_DB['default'];
   const lowConfidence = confidence < 0.6;
 
+  // Use the matched DB key for the display name so it stays consistent
+  // with the Hindi name and treatments (the raw HF label may be a different crop).
+  const diseaseName = dbKey !== 'default'
+    ? dbKey.replace(/___/g, ' - ').replace(/_/g, ' ')
+    : rawLabel.replace(/___/g, ' - ').replace(/_/g, ' ');
+
   return {
-    diseaseName: rawLabel.replace(/___/g, ' - ').replace(/_/g, ' '),
+    diseaseName,
     diseaseNameHindi: entry.nameHindi,
     confidence,
     severity: entry.severity,
